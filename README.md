@@ -8,3 +8,16 @@ Communicate with OpenAI's ChatGPT Davinci Model using discord! Simply type /chat
 
 ### CV/Job Interest Writer:
 Get ChatGPT to write interest forms for various jobs for you! Simply fill out company name, job description, and your skills, and it will generate a rough draft of a CV or interest letter that you can use to apply to companies!
+
+
+
+# Setup
+
+### Install dependencies
+
+
+
+
+
+
+

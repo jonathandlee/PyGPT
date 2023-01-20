@@ -1,13 +1,8 @@
-# import os
 import openai
 from src import initbot
 
-#openai.api_key = initbot.get_config["OPENAI_API_KEY"]
-openai.api_key = initbot.config["OPENAI_API_KEY"]
 
-
-
-#openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = initbot.config["OPENAI_API_KEY"] # Using key OPENAI_API_KEY, access the openai key found in your config file
 
 async def respond(request):
     response = openai.Completion.create(

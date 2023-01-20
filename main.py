@@ -1,5 +1,4 @@
-
-from src import initbot
+from src import initbot 
 
 
 if __name__ == '__main__':

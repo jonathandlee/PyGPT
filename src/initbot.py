@@ -1,15 +1,8 @@
 import discord
 from discord import app_commands
 
-
-
-
-import os
-
 def get_config():
     import json
-
-
     with open("config.json", "r") as jsonfile:
         data = json.load(jsonfile)
     return data   
@@ -17,18 +10,31 @@ def get_config():
 config = get_config()
 
 
-intents = discord.Intents.default()
-client = discord.Client(intents=intents)
-tree = app_commands.CommandTree(client)
+class aclient(discord.Client):
+    def __init__(self):
+        super().__init__(intents=discord.Intents().default())
+        self.tree = app_commands.CommandTree(self)
+        self.activity = discord.Activity(type=discord.ActivityType.streaming, name="/cvletter")
+
+
+# intents = discord.Intents.default()
+# client = discord.Client(intents=intents)
+# tree = app_commands.CommandTree(client)
+# client.activity = discord.Activity(type=discord.ActivityType.streaming, name="/cvletter")
 
 def initialize_bot():
+    """Initialize PyGPT Bot Client"""
+    client = aclient()
     from src import commands
+    
 
+
+    
     @client.event
-    async def ready():
-        await tree.sync()
-
-    @tree.command(name="cvletter",description="Write a CV or Interest letter for a company")
+    async def on_ready():
+        await client.tree.sync()
+        
+    @client.tree.command(name="cvletter",description="Write a CV or Interest letter for a company")
     async def cvletter(interaction: discord.Interaction, *, company: str, skills: str, jobdesc: str):
         #await interaction.response.defer(ephemeral=False)
         user = interaction.user
@@ -36,27 +42,20 @@ def initialize_bot():
         channel = interaction.channel
         await commands.send_chat(request,interaction)
         
-    @tree.command(name="chat",description="Chat with ChatGPT!")
+    @client.tree.command(name="chat",description="Chat with ChatGPT!")
     async def chat(interaction: discord.Interaction, *, message:str):
         #await interaction.response.defer(ephemeral=False)
         user = interaction.user
         request = str(message)
         channel = interaction.channel
         await commands.send_chat(request,interaction)
+    
+    @client.tree.command(name="codeexplain",description="Let ChatGPT Explain a file uploaded on github to you!")
+    async def codeexplain(interaction: discord.Interaction, *, message:str):
+        user = interaction.user
+        #request = commands.link_parse(str(message))
+        await commands.link_parse(message,interaction)
+
+    
+    # Run client command response (Requires token to execute)
     client.run(config['discord_bot_token'])
-
-
-
-
-
-    # if __name__ == '__initbot__':
-    #     class discordclient(discord.Client):
-    #         def __init__(self) -> None:
-    #             super().__init__(intents=discord.Intents.default())
-    #             self.tree = app_commands.CommandTree(self)
-    #             self.activity = discord.Activity(type=discord.ActivityType.watching, name="/chat | /help")
-    #     client = discordclient
-
-    #     @client.event
-    #     async def ready():
-
